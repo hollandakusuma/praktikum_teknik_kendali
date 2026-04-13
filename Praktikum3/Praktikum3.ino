@@ -55,6 +55,7 @@ void setup() {
 
   ledcSetup(0, 5000, 8); // channel 0, 5kHz, 8-bit
   ledcSetup(1, 5000, 8); // channel 1, 5kHz, 8-bit
+  Serial.println("Jarak Kiri, Jarak Kanan, Error, Kontrol (Ut)");
 }
 
 void loop() {
@@ -87,10 +88,10 @@ void loop() {
     prev_error = error;
 
     // DEBUG SERIAL
-    Serial.print("L: "); Serial.print(d_left);
-    Serial.print(" | R: "); Serial.print(d_right);
-    Serial.print(" | E: "); Serial.print(error);
-    Serial.print(" | U: "); Serial.println(control);
+    Serial.print(d_left);
+    Serial.print(","); Serial.print(d_right);
+    Serial.print(","); Serial.print(error);
+    Serial.print(","); Serial.println(control);
   }
 }
 
