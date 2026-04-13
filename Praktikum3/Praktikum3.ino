@@ -1,7 +1,3 @@
-// =======================
-// PIN CONFIGURATION
-// =======================
-
 // Ultrasonic Sensor Kiri
 #define TRIG_LEFT  5
 #define ECHO_LEFT  18
@@ -19,25 +15,19 @@
 #define IN3 32
 #define IN4 14
 
-// =======================
 // PID PARAMETERS
-// =======================
 float Kp = 3.0;
 float Ki = 0.05;
 float Kd = 1.5;
 
-// =======================
 // PID VARIABLES
-// =======================
 float error = 0;
 float prev_error = 0;
 float integral = 0;
 float derivative = 0;
 float control = 0;
 
-// =======================
 // SYSTEM PARAMETERS
-// =======================
 int base_speed = 130;
 int max_pwm = 255;
 
@@ -45,9 +35,6 @@ unsigned long lastTime = 0;
 unsigned long startTime = 0;
 int Ts = 50; // sampling time (ms)
 
-// =======================
-// SETUP
-// =======================
 void setup() {
   Serial.begin(115200);
 
@@ -70,7 +57,7 @@ void setup() {
 
   Serial.println("SYSTEM INIT... Robot diam 5 detik");
 
-  // 🚨 DIAM 5 DETIK SEBELUM MULAI
+  // DIAM 5 DETIK SEBELUM MULAI
   delay(5000);
 
   Serial.println("time_ms,d_left,d_right,error,control");
@@ -78,9 +65,6 @@ void setup() {
   startTime = millis(); // start logging time
 }
 
-// =======================
-// LOOP
-// =======================
 void loop() {
   if (millis() - lastTime >= Ts) {
     lastTime = millis();
@@ -88,20 +72,14 @@ void loop() {
     // TIME STAMP
     unsigned long currentTime = millis() - startTime;
 
-    // =======================
     // 1. READ SENSOR
-    // =======================
     float d_left  = readUltrasonic(TRIG_LEFT, ECHO_LEFT);
     float d_right = readUltrasonic(TRIG_RIGHT, ECHO_RIGHT);
 
-    // =======================
     // 2. ERROR
-    // =======================
     error = d_left - d_right;
 
-    // =======================
     // 3. PID CALCULATION (DISKRIT)
-    // =======================
     float dt = Ts / 1000.0; // konversi ke detik
 
     integral += error * dt;
@@ -109,9 +87,7 @@ void loop() {
 
     control = (Kp * error) + (Ki * integral) + (Kd * derivative);
 
-    // =======================
     // 4. MOTOR CONTROL
-    // =======================
     int motor_left  = base_speed + control;
     int motor_right = base_speed - control;
 
@@ -123,9 +99,7 @@ void loop() {
 
     prev_error = error;
 
-    // =======================
     // 5. SERIAL LOGGING (CSV READY)
-    // =======================
     Serial.print(currentTime);
     Serial.print(",");
     Serial.print(d_left);
@@ -138,9 +112,6 @@ void loop() {
   }
 }
 
-// =======================
-// ULTRASONIC FUNCTION
-// =======================
 float readUltrasonic(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -156,9 +127,6 @@ float readUltrasonic(int trigPin, int echoPin) {
   return distance;
 }
 
-// =======================
-// MOTOR CONTROL
-// =======================
 void setMotorLeft(int speed) {
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
